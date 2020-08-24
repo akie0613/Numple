@@ -35,7 +35,12 @@ public class SolveNumple {
             OutputCons(allNum);
 
             out:
-            while (true) {
+            for (int i = 0;;i++) {
+                //10回ループしても解けないなら解読不可とみなす
+                if(i ==10){
+                    System.out.println("解読不可:");
+                    break ;
+                }
                 //横ライン計算処理
                 allNum = calcLine(allNum);
                 //縦ライン計算処理
@@ -43,8 +48,8 @@ public class SolveNumple {
                 //ブロック計算処理
                 allNum = calcBlock(allNum);
                 //すべてのオブジェクトが持つ配列"Enterable"の長さが1になるまで繰り返す
-                for (int i = 0; i < allNum.size(); i++) {
-                    if (allNum.get(i).getEnterable().size() != 1) {
+                for (int j = 0; j < allNum.size(); j++) {
+                    if (allNum.get(j).getEnterable().size() != 1) {
                         continue out;
                     }
                 }
