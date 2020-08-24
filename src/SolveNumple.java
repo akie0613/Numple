@@ -30,16 +30,40 @@ public class SolveNumple {
                 allNum.add(Num);
             }
 
-            System.out.println("解読前:");
+            System.out.println("解読前:" + (loop + 1));
             //コンソール出力
             OutputCons(allNum);
 
             out:
-            for (int i = 0;;i++) {
+            for (int i = 0; ; i++) {
                 //10回ループしても解けないなら解読不可とみなす
-                if(i ==10){
+//                if(i >10&&i%3==0){
+//                    System.out.println("解読不可:");
+//                    for (int j = 0; j < allNum.size(); j++) {
+//                        if (allNum.get(j).getEnterable().size() == 2) {
+//                            allNum.get(j).getEnterable().remove(0);
+//                            System.out.println("仮置き");
+//                            break ;
+//                        }
+//
+//                    }
+//                    //break ;
+//                }
+//                if(i >30&&i%3==0){
+//                    System.out.println("解読不可2:");
+//                    for (int j = 0; j < allNum.size(); j++) {
+//                        if (allNum.get(j).getEnterable().size() == 3) {
+//                            allNum.get(j).getEnterable().remove(0);
+//                        }
+//                        System.out.println("仮置き2");
+//                        break ;
+//                    }
+//                    //break ;
+//                }
+                if (i == 10) {
                     System.out.println("解読不可:");
-                    break ;
+                    //isTempTrue(allNum);
+                    break;
                 }
                 //横ライン計算処理
                 allNum = calcLine(allNum);
@@ -153,4 +177,68 @@ public class SolveNumple {
         }
         return allNum;
     }
+
+    //解読不可判定のナンプレを解読　作成途中
+    public static List<MysteryNum> isTempTrue(List<MysteryNum> allNum) {
+        int temp1 = 0;
+        int temp2;
+        int tempIndex=0;
+
+
+
+        List<MysteryNum> allNum2 = new ArrayList<>(allNum);
+
+
+        for (int j = 0; j < allNum2.size(); j++) {
+            if (allNum2.get(j).getEnterable().size() == 2) {
+                temp1 = allNum2.get(j).getEnterable().get(1);
+                tempIndex = j;
+                allNum2.get(j).getEnterable().remove(0);
+                System.out.println("仮置き");
+                break;
+            }
+        }
+
+        out:
+        for (int i = 0; ; i++) {
+            //横ライン計算処理
+            allNum2 = calcLine(allNum2);
+            //縦ライン計算処理
+            allNum2 = calcRow(allNum2);
+            //ブロック計算処理
+            allNum2 = calcBlock(allNum2);
+            if (i == 10) {
+                System.out.println("解読不可:");
+                allNum.get(tempIndex).getEnterable().remove(0);
+                allNum.get(tempIndex).getEnterable().add(temp1);
+                isTempTrue(allNum);
+            }
+            //すべてのオブジェクトが持つ配列"Enterable"の長さが1になるまで繰り返す
+            for (int j = 0; j < allNum2.size(); j++) {
+                if (allNum2.get(j).getEnterable().size() != 1) {
+                    continue out;
+                }
+            }
+            break ;
+        }
+        for (int i = 0; i < 81; i++) {
+                for (int j = 0; j < 9; j++) {
+                    //比較対象のEnterableの中身が確定かつ対象のEnterableの中身が未確定なら
+                    if ((allNum.get((i / 9 * 9) + j).getEnterable().get(0) ==  allNum.get(i).getEnterable().get(0))
+                    ||(allNum.get((i % 9) + (j * 9)).getEnterable().get(0) ==  allNum.get(i).getEnterable().get(0))
+                            ||(allNum.get((((i / 9) / 3) * 27) + (((i % 9) / 3) * 3) + j % 3 + ((j / 3) * 9)).getEnterable().get(0) ==  allNum.get(i).getEnterable().get(0))
+                    ) {
+                        allNum.get(tempIndex).getEnterable().remove(0);
+                        allNum.get(tempIndex).getEnterable().add(temp1);
+                        isTempTrue(allNum);
+                    }
+
+                }
+
+        }
+
+        return allNum2;
+    }
+//
+//}
 }
